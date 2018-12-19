@@ -5,7 +5,6 @@ import utils
 import json
 
 
-
 # Static Routes
 
 @get("/js/<filepath:re:.*\.js>")
@@ -30,11 +29,24 @@ def index():
 
 
 @route('/browse')
-def index():
+def browse():
     sectionTemplate = "./templates/browse.tpl"
     sectionData = utils.getAllShows()
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=sectionData)
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                    sectionData=sectionData)
 
+
+@route('/search', method=['GET', 'POST'])
+def search():
+    query = request.forms.get('q')
+    sectionData = None
+    if query:
+        sectionTemplate = "./templates/search_result.tpl"
+        sectionData = utils.get_search_results(query)
+    else:
+        sectionTemplate = "./templates/search.tpl"
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                    sectionData={}, query=query, results=sectionData)
 
 
 run(host='localhost', port=os.environ.get('PORT', 5000))
