@@ -5,6 +5,7 @@ import utils
 import json
 
 
+
 # Static Routes
 
 @get("/js/<filepath:re:.*\.js>")
@@ -31,8 +32,9 @@ def index():
 @route('/browse')
 def index():
     sectionTemplate = "./templates/browse.tpl"
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-                    sectionData={utils.all_shows})
+    sectionData = utils.getAllShows()
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=sectionData)
 
 
-run(host='0.0.0.0', port=os.environ.get('PORT', 5000))
+
+run(host='localhost', port=os.environ.get('PORT', 5000))
