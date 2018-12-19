@@ -3,6 +3,7 @@ from bottle import (get, post, redirect, request, route, run, static_file,
                     template)
 import utils
 
+
 # Static Routes
 
 @get("/js/<filepath:re:.*\.js>")
@@ -22,6 +23,15 @@ def index():
     sectionTemplate = "./templates/home.tpl"
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
 
-run(host='0.0.0.0', port=os.environ.get('PORT', 5000))
 
-print('test')
+@route('/browse')
+def index():
+    sectionTemplate = "./templates/browse.tpl"
+    sectionData = utils.getAllShows()
+    print(sectionData)
+    print(type(sectionData))
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=sectionData)
+
+
+
+run(host='localhost', port=os.environ.get('PORT', 5000))
