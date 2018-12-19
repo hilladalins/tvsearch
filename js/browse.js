@@ -32,9 +32,11 @@ Browse.loadContent = function(path, updateHistory = true, stateObj = {}){
   dynamic.classList.add("loading");
   fetch(`/ajax${path}`)
   .then(function (response) {
+    console.log(response)
     return response.text();
   })
   .then(function (result) {
+      console.log(result)
       if (updateHistory){
         window.history.pushState(stateObj, "Ajax Load", path);
       }

@@ -25,13 +25,16 @@ def index():
 
 
 @route('/browse')
-def index():
+def browse():
     sectionTemplate = "./templates/browse.tpl"
     sectionData = utils.getAllShows()
-    print(sectionData)
-    print(type(sectionData))
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=sectionData)
 
+
+@route('/ajax/show/<id>')
+def show(id):
+    result = utils.getShow(id)
+    return template("./templates/show.tpl", version=utils.getVersion(), result=result)
 
 
 run(host='localhost', port=os.environ.get('PORT', 5000))
