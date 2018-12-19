@@ -30,6 +30,17 @@ def getAllShows():
     return result
 
 
+def get_all_shows_sorted(order):
+    all_shows_unsorted = getAllShows()
+    if order == 'name':
+        return sorted(all_shows_unsorted, key=lambda k: k['name'])
+    elif order == 'ratings':
+        return sorted(all_shows_unsorted, key=lambda k: str(k['rating']['average']), reverse=True)
+    else:
+        print('provided wrong parameter to get_all_shows_sorted. only "name" or "ratings"')
+        return all_shows_unsorted
+
+
 # query is a string
 def get_search_results(query):
     results = []
