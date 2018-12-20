@@ -3,7 +3,6 @@ from bottle import (get, post, redirect, request, route, run, static_file,
                     template, Bottle)
 import utils
 import json
-import functools
 
 
 # Static Routes
@@ -32,42 +31,35 @@ def index():
 @route('/browse')
 def browse():
     sectionTemplate = "./templates/browse.tpl"
-    sectionData = utils.get_all_shows_sorted('ratings')
+    sectionData = utils.get_all_shows_sorted('name')
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData=sectionData)
 
 
-# to be implemented in order to bake a parameter to the browse function
-# app = Bottle()
-# browse_with_param = functools.partial(browse, order='name')
-# app.route('/browse', ['GET'], browse_with_param)
-
-
 @route('/ajax/show/<id>')
 def show(id):
-    result = utils.getShow(id)
+    result = utils.get_specific_show_api(id)
     return template("./templates/show.tpl", version=utils.getVersion(), result=result)
 
 
 @route('/show/<id>')
 def show(id):
     sectionTemplate = "./templates/show.tpl"
-    sectionData = utils.getShow(id)
+    sectionData = utils.get_specific_show_api(id)
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData=sectionData)
 
 
 @route('/ajax/show/<id>/episode/<episode_id>')
 def show(id, episode_id):
-    result = utils.getEpisode(id, episode_id)
-    print(result)
+    result = utils.get_specific_episode_api(id, episode_id)
     return template("./templates/episode.tpl", version=utils.getVersion(), result=result)
 
 
 @route('/show/<id>/episode/<episode_id>')
 def show(id, episode_id):
     sectionTemplate = "./templates/episode.tpl"
-    sectionData = utils.getEpisode(id, episode_id)
+    sectionData = utils.get_specific_episode_api(id, episode_id)
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData=sectionData)
 
