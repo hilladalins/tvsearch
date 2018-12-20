@@ -92,28 +92,12 @@ def get_all_shows_sorted(order):
 # query is a string
 def get_search_results(query):
     results = []
-    all_shows = []
-    for show in AVAILABLE_SHOWS:
-        show = parseJsonShow(show)
-        all_shows.append(show)
-    # searching if the user entered the show's name. not implemented in ITC's search, but should be.
-    # for show in all_shows:
-    #     if query == show['name']:
-    #         if show["_embedded"]['episodes']:
-    #             for episode in show["_embedded"]['episodes']:
-    #                 results.append({'showid': show['id'], 'episodeid': episode['id'],
-    #                                 'text': '{}: {}'.format(show['name'], episode['name'])})
-    #             return results
-
-    # searching if the user entered a text as part of the summary
-    # "2. For the search functionality search for the string in episode name and summary" - from the HIVE
-    for show in all_shows:
-        for episode in show["_embedded"]['episodes']:
-            if episode['name'] and episode['summary']:  # to investigate
-                if query in episode['name'] or query in episode['summary']:
-                    results.append(
-                        {'showid': show['id'], 'episodeid': episode['id'],
-                         'text': '{}: {}'.format(show['name'], episode['name'])})
+    r_json = requests.get(url=api_url, params=dict(q=query))
+    r = r_json.json()
+    for show in r:
+        for episode in show["_embedded"]["episodes"]:
+            results.append({'showid': show['id'], 'episodeid': episode['id'],
+            'text': '{}: {}'.format(show['name'], episode['name'])})
     return results
 
 #to be implemented in the API version:
