@@ -14,72 +14,16 @@ def getVersion():
     return "0.0.1"
 
 
-def getJsonFromFile(showName):
-    try:
-        return template("{folder}/{filename}.json".format(folder=JSON_FOLDER, filename=showName))
-    except:
-        return "{}"
-
-
-def parseJsonShow(showName):
-    return json.loads(getJsonFromFile(showName))
-
-
-def getShowIdAndName(show_to_return, show):
-    show_to_return['id'] = show['id']
-    show_to_return['name'] = show['name']
-    return show_to_return
-
-
-def getEpisodeSeasonNameAndImage(episode_to_return, episode):
-    episode_to_return['season'] = episode['season']
-    episode_to_return['name'] = episode['name']
-    episode_to_return['image'] = {}
-    if episode['image']:
-        episode_to_return['image']['original'] = episode['image']['original']
-    return episode_to_return
-
-
-def getShow(showName):
-    show = parseJsonShow(showName)
-    show_to_return = {}
-    show_to_return = getShowIdAndName(show_to_return, show)
-    show_to_return['_embedded'] = {}
-    show_to_return['_embedded']['episodes'] = []
-    episodes = show['_embedded']['episodes']
-    for i in range(len(episodes)):
-        episode = {}
-        episode = getEpisodeSeasonNameAndImage(episode, episodes[i])
-        episode['id'] = episodes[i]['id']
-        show_to_return['_embedded']['episodes'].append(episode)
-    return show_to_return
-
-
-def getEpisode(showName, episodeName):
-    show = parseJsonShow(showName)
-    episode_to_return = {}
-    for episode in show['_embedded']['episodes']:
-        if episode['id'] == int(episodeName):
-            episode_to_return = getEpisodeSeasonNameAndImage(episode_to_return, episode)
-            episode_to_return['number'] = episode['number']
-            episode_to_return['summary'] = episode['summary']
-            return episode_to_return
-    # if the episode doesn't exceed return False
-    return False
-
-
-def getAllShows():
-    result = []
-    for show in AVAILABLE_SHOWS:
-        show = parseJsonShow(show)
-        show_to_return = {}
-        show_to_return = getShowIdAndName(show_to_return, show)
-        show_to_return['rating'] = {}
-        show_to_return['rating']['average'] = show['rating']['average']
-        show_to_return['image'] = {}
-        show_to_return['image']['original'] = show['image']['original']
-        result.append(show_to_return)
-    return result
+def get_shows_from_api():
+    api_url = 'http://api.tvmaze.com/shows'
+    shows_page_number = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    while True:
+        r = requests.get(url=api_url, params=dict(page=random.choice(shows_page_number)))
+        # in case the page is not found in the API
+        if r.status_code != 404:
+            break
+    response_list = r.json()
+    return response_list
 
 
 def get_all_shows_sorted(order):
@@ -105,18 +49,6 @@ def get_search_results(query):
             results.append({'showid': show['show']['id'], 'episodeid': episode['id'],
                             'text': '{}: {}'.format(show['show']['name'], episode['name'])})
     return results
-
-
-def get_shows_from_api():
-    api_url = 'http://api.tvmaze.com/shows'
-    shows_page_number = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    while True:
-        r = requests.get(url=api_url, params=dict(page=random.choice(shows_page_number)))
-        # in case the page is not found in the API
-        if r.status_code != 404:
-            break
-    response_list = r.json()
-    return response_list
 
 
 def get_specific_show_api(show_id):
