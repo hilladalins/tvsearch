@@ -41,23 +41,6 @@ def browse(path):
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData=sectionData)
 
-#
-# @route('/browse/<sort:re.*\>')
-# def browse(sort):
-#     sectionTemplate = "./templates/browse.tpl"
-#     if sort:
-#         sectionData = utils.get_all_shows_sorted(sort)
-#     else:
-#         sectionData = utils.getAllShows()
-#     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-#                     sectionData=sectionData)
-
-
-# to be implemented in order to bake a parameter to the browse function
-# app = Bottle()
-# browse_with_param = functools.partial(browse, order='name')
-# app.route('/browse', ['GET'], browse_with_param)
-
 
 @route('/ajax/show/<id>')
 def show(id):

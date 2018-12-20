@@ -34,7 +34,8 @@ def getEpisodeSeasonNameAndImage(episode_to_return, episode):
     episode_to_return['season'] = episode['season']
     episode_to_return['name'] = episode['name']
     episode_to_return['image'] = {}
-    episode_to_return['image']['original'] = episode['image']['original']
+    if episode['image']:
+        episode_to_return['image']['original'] = episode['image']['original']
     return episode_to_return
 
 
