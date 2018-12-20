@@ -1,6 +1,6 @@
 import os
 from bottle import (get, post, redirect, request, route, run, static_file,
-                    template, Bottle)
+                    template, Bottle, error)
 import utils
 import json
 import functools
@@ -50,25 +50,39 @@ def show(id):
 
 @route('/show/<id>')
 def show(id):
-    sectionTemplate = "./templates/show.tpl"
-    sectionData = utils.getShow(id)
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-                    sectionData=sectionData)
+    if id not in utils.AVAILABLE_SHOWS:
+        print('Im in')
+        sectionTemplate = "./templates/404.tpl"
+        return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                        sectionData={})
+    else:
+        sectionTemplate = "./templates/show.tpl"
+        sectionData = utils.getShow(id)
+        return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                        sectionData=sectionData)
 
 
 @route('/ajax/show/<id>/episode/<episode_id>')
 def show(id, episode_id):
     result = utils.getEpisode(id, episode_id)
-    print(result)
     return template("./templates/episode.tpl", version=utils.getVersion(), result=result)
 
 
 @route('/show/<id>/episode/<episode_id>')
 def show(id, episode_id):
-    sectionTemplate = "./templates/episode.tpl"
-    sectionData = utils.getEpisode(id, episode_id)
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-                    sectionData=sectionData)
+    if id not in utils.AVAILABLE_SHOWS:
+        sectionTemplate = "./templates/404.tpl"
+        return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                        sectionData={})
+    elif not utils.getEpisode(id, episode_id):
+        sectionTemplate = "./templates/404.tpl"
+        return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                        sectionData={})
+    else:
+        sectionTemplate = "./templates/episode.tpl"
+        sectionData = utils.getEpisode(id, episode_id)
+        return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                        sectionData=sectionData)
 
 
 @route('/search', method=['GET', 'POST'])
@@ -82,6 +96,7 @@ def search():
         sectionTemplate = "./templates/search.tpl"
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData={}, query=query, results=sectionData)
+
 
 
 run(host='localhost', port=os.environ.get('PORT', 5000))

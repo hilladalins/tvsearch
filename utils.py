@@ -63,6 +63,8 @@ def getEpisode(showName, episodeName):
             episode_to_return['number'] = episode['number']
             episode_to_return['summary'] = episode['summary']
             return episode_to_return
+    #if the episode doesn't exceed return False
+    return False
 
 
 def getAllShows():
