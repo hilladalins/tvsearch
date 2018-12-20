@@ -24,6 +24,13 @@ def getShow(showName):
     return json.loads(getJsonFromFile(showName))
 
 
+def getEpisode(showName, episodeName):
+    show = json.loads(getJsonFromFile(showName))
+    for episode in show['_embedded']['episodes']:
+        if episode['id'] == int(episodeName):
+            return episode
+
+
 def getAllShows():
     result = []
     for show in AVAILABLE_SHOWS:
