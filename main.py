@@ -1,8 +1,9 @@
 import os
 from bottle import (get, post, redirect, request, route, run, static_file,
-                    template)
+                    template, Bottle)
 import utils
 import json
+import functools
 
 
 # Static Routes
@@ -31,9 +32,15 @@ def index():
 @route('/browse')
 def browse():
     sectionTemplate = "./templates/browse.tpl"
-    sectionData = utils.getAllShows()
+    sectionData = utils.get_all_shows_sorted('name')
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData=sectionData)
+
+
+# to be implemented in order to bake a parameter to the browse function
+# app = Bottle()
+# browse_with_param = functools.partial(browse, order='name')
+# app.route('/browse', ['GET'], browse_with_param)
 
 
 @route('/ajax/show/<id>')
