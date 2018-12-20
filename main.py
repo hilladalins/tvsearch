@@ -24,8 +24,10 @@ def img(filepath):
 
 @route('/')
 def index():
+    sectionData = None
     sectionTemplate = "./templates/home.tpl"
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData={})
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                    sectionData=sectionData)
 
 
 @route('/<path:re:browse(/name|/ratings)?>')
@@ -91,7 +93,6 @@ def search():
         sectionTemplate = "./templates/search.tpl"
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData={}, query=query, results=sectionData)
-
 
 
 run(host='localhost', port=os.environ.get('PORT', 5000))

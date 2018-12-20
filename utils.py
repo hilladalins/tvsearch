@@ -1,13 +1,5 @@
-from bottle import template
-import json
 import requests
 import random
-
-# import ast
-# ast.literal_eval("{'muffin' : 'lolz', 'foo' : 'kitty'}")
-
-JSON_FOLDER = './data'
-AVAILABLE_SHOWS = ["7", "66", "73", "82", "112", "143", "175", "216", "1371", "1871", "2993", "305"]
 
 
 def getVersion():
@@ -41,7 +33,6 @@ def get_search_results(query):
     r_json = requests.get(url=api_url, params=dict(q=query))
     r = r_json.json()
     for show in r:
-        print(show)
         episodes_url = 'http://api.tvmaze.com/shows/{}/episodes'.format(show['show']['id'])
         episode_req = requests.get(url=episodes_url)
         show_episodes = episode_req.json()
