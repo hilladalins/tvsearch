@@ -42,6 +42,29 @@ def show(id):
     return template("./templates/show.tpl", version=utils.getVersion(), result=result)
 
 
+@route('/show/<id>')
+def show(id):
+    sectionTemplate = "./templates/show.tpl"
+    sectionData = utils.getShow(id)
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                    sectionData=sectionData)
+
+
+@route('/ajax/show/<id>/episode/<episode_id>')
+def show(id, episode_id):
+    result = utils.getEpisode(id, episode_id)
+    print(result)
+    return template("./templates/episode.tpl", version=utils.getVersion(), result=result)
+
+
+@route('/show/<id>/episode/<episode_id>')
+def show(id, episode_id):
+    sectionTemplate = "./templates/episode.tpl"
+    sectionData = utils.getEpisode(id, episode_id)
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                    sectionData=sectionData)
+
+
 @route('/search', method=['GET', 'POST'])
 def search():
     query = request.forms.get('q')
