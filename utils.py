@@ -19,35 +19,46 @@ def getJsonFromFile(showName):
         return "{}"
 
 
-def getShow(showName):
-    show = json.loads(getJsonFromFile(showName))
-    show_to_return = {}
+def parseJsonShow(showName):
+    return json.loads(getJsonFromFile(showName))
+
+
+def getShowIdAndName(show_to_return, show):
     show_to_return['id'] = show['id']
     show_to_return['name'] = show['name']
+    return show_to_return
+
+
+def getEpisodeSeasonNameAndImage(episode_to_return, episode):
+    episode_to_return['season'] = episode['season']
+    episode_to_return['name'] = episode['name']
+    episode_to_return['image'] = {}
+    episode_to_return['image']['original'] = episode['image']['original']
+    return episode_to_return
+
+
+def getShow(showName):
+    show = parseJsonShow(showName)
+    show_to_return = {}
+    show_to_return = getShowIdAndName(show_to_return, show)
     show_to_return['_embedded'] = {}
     show_to_return['_embedded']['episodes'] = []
     episodes = show['_embedded']['episodes']
     for i in range(len(episodes)):
         episode = {}
-        episode['season'] = episodes[i]['season']
+        episode = getEpisodeSeasonNameAndImage(episode, episodes[i])
         episode['id'] = episodes[i]['id']
-        episode['name'] = episodes[i]['name']
-        episode['image'] = {}
-        episode['image']['original'] = episodes[i]['image']['original']
         show_to_return['_embedded']['episodes'].append(episode)
     return show_to_return
 
 
 def getEpisode(showName, episodeName):
-    show = json.loads(getJsonFromFile(showName))
+    show = parseJsonShow(showName)
     episode_to_return = {}
     for episode in show['_embedded']['episodes']:
         if episode['id'] == int(episodeName):
-            episode_to_return['name'] = episode['name']
-            episode_to_return['season'] = episode['season']
+            episode_to_return = getEpisodeSeasonNameAndImage(episode_to_return, episode)
             episode_to_return['number'] = episode['number']
-            episode_to_return['image'] = {}
-            episode_to_return['image']['original'] = episode['image']['original']
             episode_to_return['summary'] = episode['summary']
             return episode_to_return
 
@@ -55,14 +66,13 @@ def getEpisode(showName, episodeName):
 def getAllShows():
     result = []
     for show in AVAILABLE_SHOWS:
-        show = json.loads(getJsonFromFile(show))
+        show = parseJsonShow(show)
         show_to_return = {}
-        show_to_return['id'] = show['id']
+        show_to_return = getShowIdAndName(show_to_return, show)
         show_to_return['rating'] = {}
         show_to_return['rating']['average'] = show['rating']['average']
         show_to_return['image'] = {}
         show_to_return['image']['original'] = show['image']['original']
-        show_to_return['name'] = show['name']
         result.append(show_to_return)
     return result
 
@@ -81,7 +91,10 @@ def get_all_shows_sorted(order):
 # query is a string
 def get_search_results(query):
     results = []
-    all_shows = getAllShows()
+    all_shows = []
+    for show in AVAILABLE_SHOWS:
+        show = parseJsonShow(show)
+        all_shows.append(show)
     # searching if the user entered the show's name. not implemented in ITC's search, but should be.
     for show in all_shows:
         if query == show['name']:
