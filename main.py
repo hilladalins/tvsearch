@@ -51,7 +51,6 @@ def show(id):
 @route('/show/<id>')
 def show(id):
     if id not in utils.AVAILABLE_SHOWS:
-        print('Im in')
         sectionTemplate = "./templates/404.tpl"
         return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                         sectionData={})
