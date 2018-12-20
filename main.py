@@ -32,7 +32,7 @@ def index():
 @route('/browse')
 def browse():
     sectionTemplate = "./templates/browse.tpl"
-    sectionData = utils.get_all_shows_sorted('name')
+    sectionData = utils.get_all_shows_sorted('ratings')
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData=sectionData)
 
