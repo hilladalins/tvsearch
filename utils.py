@@ -20,20 +20,50 @@ def getJsonFromFile(showName):
 
 
 def getShow(showName):
-    return json.loads(getJsonFromFile(showName))
+    show = json.loads(getJsonFromFile(showName))
+    show_to_return = {}
+    show_to_return['id'] = show['id']
+    show_to_return['name'] = show['name']
+    show_to_return['_embedded'] = {}
+    show_to_return['_embedded']['episodes'] = []
+    episodes = show['_embedded']['episodes']
+    for i in range(len(episodes)):
+        episode = {}
+        episode['season'] = episodes[i]['season']
+        episode['id'] = episodes[i]['id']
+        episode['name'] = episodes[i]['name']
+        episode['image'] = {}
+        episode['image']['original'] = episodes[i]['image']['original']
+        show_to_return['_embedded']['episodes'].append(episode)
+    return show_to_return
 
 
 def getEpisode(showName, episodeName):
     show = json.loads(getJsonFromFile(showName))
+    episode_to_return = {}
     for episode in show['_embedded']['episodes']:
         if episode['id'] == int(episodeName):
-            return episode
+            episode_to_return['name'] = episode['name']
+            episode_to_return['season'] = episode['season']
+            episode_to_return['number'] = episode['number']
+            episode_to_return['image'] = {}
+            episode_to_return['image']['original'] = episode['image']['original']
+            episode_to_return['summary'] = episode['summary']
+            return episode_to_return
 
 
 def getAllShows():
     result = []
     for show in AVAILABLE_SHOWS:
-        result.append(json.loads(getJsonFromFile(show)))
+        show = json.loads(getJsonFromFile(show))
+        show_to_return = {}
+        show_to_return['id'] = show['id']
+        show_to_return['rating'] = {}
+        show_to_return['rating']['average'] = show['rating']['average']
+        show_to_return['image'] = {}
+        show_to_return['image']['original'] = show['image']['original']
+        show_to_return['name'] = show['name']
+        result.append(show_to_return)
     return result
 
 
