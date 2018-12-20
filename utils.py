@@ -79,7 +79,7 @@ def getAllShows():
 
 
 def get_all_shows_sorted(order):
-    all_shows_unsorted = get_shows_from_api()
+    all_shows_unsorted = getAllShows()
     if order == 'name':
         return sorted(all_shows_unsorted, key=lambda k: k['name'])
     elif order == 'ratings':
@@ -116,10 +116,10 @@ def get_search_results(query):
                          'text': '{}: {}'.format(show['name'], episode['name'])})
     return results
 
-
-def get_shows_from_api():
-    api_url = 'http://api.tvmaze.com/shows'
-    # r = requests.get(url=api_url, params=dict(q=, q2=))
-    r = requests.get(url=api_url)
-    response_json = r.json()
-    return response_json
+#to be implemented in the API version:
+# def get_shows_from_api():
+#     api_url = 'http://api.tvmaze.com/shows'
+#     # r = requests.get(url=api_url, params=dict(q=, q2=))
+#     r = requests.get(url=api_url)
+#     response_json = r.json()
+#     return response_json
